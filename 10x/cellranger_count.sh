@@ -1,0 +1,20 @@
+#!/bin/bash
+##run cellranger count
+
+if [ $# != 4 ]; then
+	echo "USAGE: sh cellranger.sh working_dir sample_name fastq_dir ref_dir"
+	exit 1
+else
+	echo `date`
+	
+	work_dir=$1
+	sample=$2
+	in_dir=$3
+	refs=$4
+	
+	module load cellranger/3.0.2
+	cd $work_dir
+	
+	cellranger count --id=${sample} --sample=${sample} --fastqs=${in_dir} --transcriptome=${refs} 
+
+fi
