@@ -1,0 +1,89 @@
+---
+title: "Circos chr9"
+output: html_document
+author: Pritha Chanana
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R markdown document for generating interactive circos plots and downloading svg versions of those. 
+
+```{js, echo=FALSE}
+function addSvgSaveButtonJquery(buttonId, topSvg) {
+  $(buttonId).append("<a id=imgDownload></a>")
+  $(buttonId).click(function() {
+    var html = $(
+    $(topSvg).attr("version", 1.1)
+             .attr("xmlns","http://www.w3.org/2000/svg")).clone()
+      .wrap('<p/>').parent().html();
+    // add the svg information to a and then click it to trigger the
+    // download
+    var imgsrc = 'data:image/svg+xml;base64,' + btoa(html);
+    $(buttonId + " #imgDownload").attr("download", "graph.svg");
+    $(buttonId + " #imgDownload").attr("href", imgsrc);
+    var a = $(buttonId + " #imgDownload")[0];
+    a.click();
+  });
+}
+```
+
+##You can embed any chunk of R code
+
+```{r}
+library(BioCircos)
+library(RColorBrewer)
+library(dplyr)
+
+dat <- read.csv("/fh/fast/_SR/Genomics/user/pchanana/pgal_circos/chr9/SVmerge.csv", header=T, sep=";")
+mapping <- read.table("/fh/fast/_SR/Genomics/user/pchanana/pgal_circos/chr9/svmerge_map.txt", sep="\t", header=TRUE)
+dat9 = dat %>% filter(chr1 == 9 | chr2 == 9) %>% select(1:7,sample_cnt) 
+fin <- left_join(dat9,mapping,by="PatientID")
+```
+
+## Including Plots
+You can also embed plots, for example:
+
+```{r, fig.width=10, fig.height=10, echo=FALSE}
+NP1 <- subset(fin, ProgressionStatus=="NP" & sample_cnt==1)
+NP2 <- subset(fin, ProgressionStatus=="NP" & sample_cnt==2)
+NP3 <- subset(fin, ProgressionStatus=="NP" & sample_cnt==3)
+NP4 <- subset(fin, ProgressionStatus=="NP" & sample_cnt>3)
+
+tracks_np <- BioCircosLinkTrack("np_1", as.character(NP1$chr2), NP1$start2, NP1$end2, as.character(NP1$chr1),NP1$start1,NP1$end1, maxRadius = 0.95, color=brewer.pal(8,"Dark2")[8], width=0.7)
+tracks_np <- tracks_np + BioCircosLinkTrack("np_2", as.character(NP2$chr2), NP2$start2, NP2$end2, as.character(NP2$chr1),NP2$start1,NP2$end1, maxRadius = 0.95, color="blue", width=1.3)
+tracks_np <- tracks_np + BioCircosLinkTrack("np_3", as.character(NP3$chr2), NP3$start2, NP3$end2, as.character(NP3$chr1),NP3$start1,NP3$end1, maxRadius = 0.95, color="green", width=1.3)
+tracks_np <- tracks_np + BioCircosLinkTrack("np_4", as.character(NP4$chr2), NP4$start2, NP4$end2, as.character(NP4$chr1),NP4$start1,NP4$end1, maxRadius = 0.95, color="darkorange", width=1.3)
+BioCircos(tracks_np, genomeFillColor = "Pastel1", chrPad = 0.01, displayGenomeBorder = FALSE, genomeTicksTextSize = 0, genomeTicksScale = 10e+06, elementId = "mycircos", genome="hg19")
+```
+
+
+```{js, echo=FALSE}
+$("#mycircos").append("<button id=save_svg>Save As Svg</button>");
+//Give the selectors for button and svg element to download
+addSvgSaveButtonJquery("#save_svg", "#mycircos svg");
+```
+
+
+```{r, fig.width=10, fig.height=10, echo=FALSE}
+prog1 <- subset(fin, ProgressionStatus=="Prog" & sample_cnt==1)
+prog2 <- subset(fin, ProgressionStatus=="Prog" & sample_cnt==2)
+prog3 <- subset(fin, ProgressionStatus=="Prog" & sample_cnt==3)
+prog4 <- subset(fin, ProgressionStatus=="Prog" & sample_cnt>3)
+
+tracks_prog <- BioCircosLinkTrack("prog_1", as.character(prog1$chr2), prog1$start2, prog1$end2,as.character(prog1$chr1),prog1$start1,prog1$end1, maxRadius = 0.95, color=brewer.pal(8,"Dark2")[8], width=0.7)
+tracks_prog <- tracks_prog + BioCircosLinkTrack("prog_2", as.character(prog2$chr2), prog2$start2, prog2$end2, as.character(prog2$chr1),prog2$start1,prog2$end1, maxRadius = 0.95, color="blue", width=1.1)
+tracks_prog <- tracks_prog + BioCircosLinkTrack("prog_3", as.character(prog3$chr2), prog3$start2, prog3$end2, as.character(prog3$chr1),prog3$start1,prog3$end1, maxRadius = 0.95, color="green", width=1.1)
+tracks_prog <- tracks_prog + BioCircosLinkTrack("prog_4", as.character(prog4$chr2), prog4$start2, prog4$end2, as.character(prog4$chr1),prog4$start1,prog4$end1, maxRadius = 0.95, color="darkorange", width =1.1)
+BioCircos(tracks_prog, genomeFillColor = "Pastel1", chrPad = 0.01, displayGenomeBorder = FALSE, genomeTicksTextSize = 0, genomeTicksScale = 10e+06, elementId = "mycircos2", genome="hg19")
+```
+
+
+```{js, echo=FALSE}
+$("#mycircos2").append("<button id=save_svg2>Save As Svg</button>");
+//Give the selectors for button and svg element to download
+addSvgSaveButtonJquery("#save_svg2", "#mycircos2 svg");
+```
