@@ -17,7 +17,7 @@ else
 	cd $outdir
 	touch bams_chr${chr}.txt
 	for s in $(cat $samples); do
-		samp=$(echo $s | cut -f11 -d"/")
+		samp=$(echo $s | cut -f10 -d"/")
 		samtools view -b $s $chr > ${samp}.chr${chr}.bam
 		samtools index ${samp}.chr${chr}.bam
 	done
@@ -27,7 +27,7 @@ else
 	##inner distance, junction annotation and read duplication
 	cd $outdir
 	for s in $(cat $samples); do 
-		prefix=$(echo $s | cut -f11 -d"/")
+		prefix=$(echo $s | cut -f10 -d"/")
 		/usr/bin/sbatch -J ${prefix}_ID --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org --output=/fh/scratch/delete30/_SR/Genomics/pchanana/%x.%j.out --mem=10G --wrap="python $rseqc/inner_distance.py -i ${s} -o ${prefix} -r ${rGbed}"
 		/usr/bin/sbatch -J ${prefix}_JA --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org --output=/fh/scratch/delete30/_SR/Genomics/pchanana/%x.%j.out --mem=10G --wrap="python $rseqc/junction_annotation.py -i ${s} -o ${prefix} -r ${rGbed}"
 		/usr/bin/sbatch -J ${prefix}_RD --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org --output=/fh/scratch/delete30/_SR/Genomics/pchanana/%x.%j.out --mem=10G --wrap="python $rseqc/read_duplication.py -i ${s} -o ${prefix}"

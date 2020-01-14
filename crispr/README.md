@@ -20,4 +20,6 @@
 	`
 	script for above: /fh/fast/_SR/Genomics/user/pchanana/scripts/crispr/DE_postProcess.R
 7. Create QC plots.
-	Rscript /fh/fast/_SR/Genomics/user/pchanana/scripts/crispr/volcano.R 
+	Rscript /fh/fast/_SR/Genomics/user/pchanana/scripts/crispr/volcano.R
+8. Generate alignment stats.
+	for i in `ls *out`; do echo -e $(ls ${i} | cut -f1 -d".")"\t"$(head -1 ${i} | cut -f2 -d":" | sed 's/^ //')"\t"$(head -2 $i | tail -1 | cut -f2 -d":" | sed 's/^ //' | cut -f1 -d" ")"\t"$(head -2 $i | tail -1 | cut -f2 -d":" | sed 's/^ //' | cut -f2 -d" " | sed 's/[()]//g')"\t"$(head -3 $i | tail -1 | cut -f2 -d":" | sed 's/^ //' | cut -f1 -d" ")"\t"$(head -3 $i | tail -1 | cut -f2 -d":" | sed 's/^ //' | cut -f2 -d" " | sed 's/[()]//g'); done	 

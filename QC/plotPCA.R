@@ -1,19 +1,35 @@
 args =  commandArgs(TRUE)
 fileName=args[1]
 outFile=args[2]
-if (file.exists(fileName) == FALSE || length(args) != 2){
-  writeLines ("Usage:\nRscript plot_PCA.R fileName<RPKMS> path_to_outfilepng\n");
+group=args[3]
+if (file.exists(fileName) == FALSE || length(args) != 3){
+  writeLines ("Usage:\nRscript plot_PCA.R fileName<raw counts> path_to_outfilepng groups<colon sep>\n");
   quit()
 }
 
+library("edgeR")
 library("ggplot2")
 library("ggrepel")
 
 dat <- read.table(fileName, sep="\t", header=TRUE, stringsAsFactors=FALSE, row.names=1)
-pca_data <- prcomp(t(dat))
+d<-data.frame(d[2:ncol(d)])
+group <- strsplit(group,":")[[1]]
+targets <- data.frame(Sample = names(d),
+                      Group = group)
+
+d<-d[,as.character(targets$Sample)]
+nrow(d)
+d<-DGEList(counts=d,group=group)
+keep <- rowSums(cpm(d)>1) >= d3
+d <- d[keep, ,keep.lib.sizes=FALSE]
+nrow(d)
+d <- calcNormFactors(d)
+nd <- data.frame(cpm(d, normalized.lib.sizes = T, log = T), check.names = F)
+
+pca_data <- prcomp(t(nd))
 pca_data_perc <- round(100*pca_data$sdev^2/sum(pca_data$sdev^2),1)
 #df_pca_data <- data.frame(PC1=pca_data$x[,1], PC2=pca_data$x[,2], sample=colnames(dat), condition=c("orig","rep","orig","orig","rep","orig","orig","rep","orig","orig","rep","orig","orig","rep","orig","rep","orig","orig"))
-df_pca_data <- data.frame(PC1=pca_data$x[,1], PC2=pca_data$x[,2], sample=colnames(dat), condition=c("ctrl","sifzd2","tgfb","comb","sifzd2","tgfb","comb","ctrl","sifzd2","tgfb","comb","ctrl"))
+df_pca_data <- data.frame(PC1=pca_data$x[,1], PC2=pca_data$x[,2], sample=colnames(dat), condition=group)
 head(df_pca_data)
 
 ggplot(df_pca_data,aes(PC1,PC2, color=condition)) + geom_point(size=4) + labs(x=paste0("PC1(",pca_data_perc[1],")"), y=paste0("PC2(",pca_data_perc[2],")")) + geom_text_repel(data=df_pca_data, aes(PC1, PC2, label=row.names(df_pca_data)))

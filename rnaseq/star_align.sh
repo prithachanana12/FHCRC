@@ -16,8 +16,8 @@ else
 
 	##Update paths after new references are created
 	if [ "$genome" == "mm10" ]; then
-		STARref=/shared/biodata/ngs/Reference/iGenomes/Mus_musculus/UCSC/mm10/Sequence/STAR
-		gtfFile=/shared/biodata/ngs/Reference/iGenomes/Mus_musculus/UCSC/mm10/Annotation/Archives/archive-2015-07-17-14-33-26/Genes/genes.gtf
+		STARref=/fh/fast/_SR/Genomics/user/pchanana/references/GRCm38/STARref
+		gtfFile=/fh/fast/_SR/Genomics/user/pchanana/references/GRCm38/STARref/Mus_musculus.GRCm38.93.gtf
 	elif [ "$genome" == "hg19" ]; then
 		STARref=/shared/biodata/ngs/Reference/iGenomes/Homo_sapiens/UCSC/hg19/Sequence/STAR
 		gtfFile=/shared/biodata/ngs/Reference/iGenomes/Homo_sapiens/UCSC/hg19/Annotation/Archives/archive-2015-07-17-14-32-32/Genes/genes.gtf

@@ -15,6 +15,6 @@ else
 	module load cellranger/3.0.2
 	cd $work_dir
 	
-	/usr/bin/sbatch --workdir=${work_dir} -J count_${sample} --mem=25G --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org -o ${work_dir}/%x.%j.out --wrap="cellranger count --id=${sample} --sample=${sample} --fastqs=${in_dir} --transcriptome=${refs}"
+	/usr/bin/sbatch --workdir=${work_dir} -J count_${sample} --mem=25G --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org -o /fh/scratch/delete30/_SR/Genomics/pchanana/%x.%j.out --wrap="cellranger count --id=${sample} --sample=${sample} --fastqs=${in_dir} --transcriptome=${refs}"
 
 fi

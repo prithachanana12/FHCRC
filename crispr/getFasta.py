@@ -6,8 +6,8 @@ def main(guides,outfile):
 	f=open(outfile,'w')
 	with open(guides,'r') as f1:
 		for line in f1:
-			guide=line.split("\t")[0].rstrip('\n')
-			header=line.split("\t")[2].rstrip('\n')
+			guide=line.split("\t")[2].rstrip('\n')
+			header=line.split("\t")[0].rstrip('\n')
 			f.write(">"+header+"\n")
 			f.write(guide+"\n")
 	f.close()

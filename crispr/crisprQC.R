@@ -64,6 +64,7 @@ ggsave(paste0(outFile, "_corr.pdf"),width=10, height=10, units="in", dpi=800)
 #sds.top <- sds[1:10000]
 #nd.top <- nd[row.names(nd) %in% names(sds.top),]
 
+#nd <- data.frame(cpm(d, normalized.lib.sizes = T, log = F), check.names = F)
 pca_data <- prcomp(t(nd))
 pca_data_perc <- round(100*pca_data$sdev^2/sum(pca_data$sdev^2),1)
 df_pca_data <- data.frame(PC1=pca_data$x[,1], PC2=pca_data$x[,2], sample=colnames(nd), condition=group)

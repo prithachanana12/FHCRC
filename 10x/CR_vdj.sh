@@ -15,6 +15,6 @@ else
 	ml cellranger/3.0.2
 	cd $outdir
 	
-	/usr/bin/sbatch -J vdj_${sample} --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org --workdir=${outdir} --mem=20G --ntasks-per-node=1 --wrap="cellranger vdj --id=${sample}-vdj --fastqs=${fq} --reference=${ref} --sample=${sample}"
+	/usr/bin/sbatch -J vdj_${sample} --mail-type=END,FAIL --mail-user=pchanana@fredhutch.org --workdir=${outdir} -o /fh/scratch/delete30/_SR/Genomics/pchanana/%x.%j.out --mem=20G --ntasks-per-node=1 --wrap="cellranger vdj --id=${sample}-vdj --fastqs=${fq} --reference=${ref} --sample=${sample}"
 
 fi
